@@ -8,6 +8,11 @@ import { JwtService } from '@nestjs/jwt';
 @Injectable()
 export class AuthService {
 
+    constructor(
+        @InjectRepository(User)
+        private userRepository: Repository<User>,
+  ) {}
+
     async login(dto: LoginDto) {
 
         const user = await this.usersService.findOneByEmail(dto.email);
@@ -42,4 +47,44 @@ export class AuthService {
         }
     };
     }
+
+
+    async register(createUserDto: CreateUserDto) {
+
+    const { email, password, first_name, last_name} = createUserDto;
+
+    // ۱. چک کردن تکراری نبودن کاربر
+    const existingUser = await this.userRepository.findOne({ where: { email } });
+    
+    if (existingUser) {
+      throw new BadRequestException('این ایمیل قبلاً ثبت شده است');
+    }
+
+    try{
+        // ۲. هش کردن پسورد
+        const hashedPassword = await bcrypt.hash(password, 10);
+
+        // ۳. ذخیره در دیتابیس
+        const user = this.userRepository.create({
+        email,
+        password: hashedPassword,
+        firstName,
+        lastName,
+        });
+
+        await this.userRepository.save(user);
+
+        // ۴. برگرداندن دیتای کاربر (بدون پسورد)
+        delete user.password;
+        return {
+        message: 'ثبت‌نام با موفقیت انجام شد',
+        user,
+        };
+
+    } catch (error) {
+        
+      this.logger.error(`خطا در هنگام ذخیره‌سازی کاربر: ${error.message}`);
+      throw new BadRequestException('خطایی در فرآیند ثبت‌نام رخ داد');
+    }
+  }
 }
