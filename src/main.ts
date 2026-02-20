@@ -1,6 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ConfigService} from '@nestjs/config';
+import { ValidationPipe } from '@nestjs/common';
 
 async function bootstrap() {
 
@@ -8,6 +9,7 @@ async function bootstrap() {
 
   app.enablrCors(); // برای اینکه فرانت‌اِند بتونه بهش وصل شه
   app.setGlobalPefix('api/v1');  // ورژن‌بندی API
+  app.useGlobalPipes(new ValidationPipe()); // فعال سازی validations
 
   const configService = ConfigService.get(ConfigService);
   const port = configService.get(PORT) || 3001 ;
@@ -28,7 +30,7 @@ async function bootstrap() {
   SwaggerModule.setup('api/docs', app, document);
 
   //************************************** */
-  
+
   await app.listen(PORT);
 
   console.log(`Server is running on: http://localhost:${port}/api/v1`);
