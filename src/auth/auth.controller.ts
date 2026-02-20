@@ -13,4 +13,11 @@ export class AuthController {
   async login(@Body() loginDto: LoginDto) {
     return this.authService.login(loginDto);
   }
+
+
+@Post('register')
+@ApiOperation({ summary: 'ثبت نام کاربر جدید' })
+async register(@Body() createUserDto: CreateUserDto) {
+  return this.authService.register(createUserDto);
+}
 }

@@ -82,7 +82,7 @@ export class AuthService {
         };
 
     } catch (error) {
-        
+
       this.logger.error(`خطا در هنگام ذخیره‌سازی کاربر: ${error.message}`);
       throw new BadRequestException('خطایی در فرآیند ثبت‌نام رخ داد');
     }
