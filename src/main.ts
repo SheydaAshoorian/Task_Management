@@ -10,7 +10,12 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector))); // فعال‌سازی قابلیت سریالایز کردن (حذف فیلدهای @Exclude)
-  app.enableCors(); // برای اینکه فرانت‌اِند بتونه بهش وصل شه
+  app.enableCors({
+    origin: 'http://localhost:3000', // آدرس فرانت‌اِند 
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    credentials: true,
+  }); 
+  
   app.setGlobalPrefix('api/v1');  // ورژن‌بندی API
   app.useGlobalPipes(new ValidationPipe()); // فعال سازی validations
   app.useGlobalInterceptors(new TransformInterceptor());  //  اینترسپتور تغییر فرمت جواب
