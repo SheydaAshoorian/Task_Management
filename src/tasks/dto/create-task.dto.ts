@@ -4,25 +4,25 @@ import { TaskStatus, TaskPriority } from '../entities/task.entity';
 
 export class CreateTaskDto {
 
-    @ApiProperty()
+    @ApiProperty({ example: 'طراحی دیتابیس' })
     @IsString() 
     @IsNotEmpty()
     title: string;
 
-    @ApiProperty()
+    @ApiProperty({ example: 'باید جداول یوزر و تسک طراحی شوند', required: false })
     @IsString()
     @IsOptional()
     description: string;
 
-    @ApiProperty()
+    @ApiProperty({ enum: TaskPriority, example: TaskPriority.High })
     @IsEnum(TaskPriority, { message: 'اولویت باید یکی از مقادیر Low, Medium یا High باشد' })
     priority: TaskPriority;
 
-    @ApiProperty()
+    @ApiProperty({ enum: TaskStatus, example: TaskStatus.Todo })
     @IsEnum(TaskStatus, { message: 'وضعیت نامعتبر است' })
     status: TaskStatus;
 
-    @ApiProperty()
+    @ApiProperty({ example: '2026-12-30', description: 'تاریخ ضرب‌الاجل تسک' })
     @IsDateString({}, { message: 'فرمت تاریخ ددلاین صحیح نیست' })
     @IsOptional()
     deadline?: Date;
