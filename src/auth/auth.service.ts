@@ -51,13 +51,9 @@ export class AuthService {
 
     return {
         message: 'خوش آمدید! ورود با موفقیت انجام شد',
+        data: {
         access_token: await this.jwtService.signAsync(payload),
-        user: {
-        id: user.id,
-        first_name: user.first_name,
-        last_family: user.last_name,
-        email: user.email,
-        role: user.role
+        user: user
         }
     };
     }

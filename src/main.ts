@@ -3,6 +3,7 @@ import { AppModule } from './app.module';
 import { ConfigService} from '@nestjs/config';
 import { ValidationPipe, ClassSerializerInterceptor } from '@nestjs/common';
 import { SwaggerModule, DocumentBuilder} from '@nestjs/swagger';
+import { TransformInterceptor } from './common/interceptors/transform.interceptor';
 
 async function bootstrap() {
 
@@ -12,6 +13,8 @@ async function bootstrap() {
   app.enableCors(); // برای اینکه فرانت‌اِند بتونه بهش وصل شه
   app.setGlobalPrefix('api/v1');  // ورژن‌بندی API
   app.useGlobalPipes(new ValidationPipe()); // فعال سازی validations
+  app.useGlobalInterceptors(new TransformInterceptor());  //  اینترسپتور تغییر فرمت جواب
+
 
   const configService = app.get(ConfigService);
   const port = configService.get<number>('PORT') || 3001 ;
