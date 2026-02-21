@@ -8,12 +8,12 @@ async function bootstrap() {
 
   const app = await NestFactory.create(AppModule);
 
-  app.enablrCors(); // برای اینکه فرانت‌اِند بتونه بهش وصل شه
-  app.setGlobalPefix('api/v1');  // ورژن‌بندی API
+  app.enableCors(); // برای اینکه فرانت‌اِند بتونه بهش وصل شه
+  app.setGlobalPrefix('api/v1');  // ورژن‌بندی API
   app.useGlobalPipes(new ValidationPipe()); // فعال سازی validations
 
-  const configService = ConfigService.get(ConfigService);
-  const port = configService.get(PORT) || 3001 ;
+  const configService = app.get(ConfigService);
+  const port = configService.get<number>('PORT') || 3001 ;
 
 
   //***************.  پیکربندی Swagger ****************** */
@@ -32,7 +32,7 @@ async function bootstrap() {
 
   //************************************** */
 
-  await app.listen(PORT);
+  await app.listen(port);
 
   console.log(`Server is running on: http://localhost:${port}/api/v1`);
 

@@ -1,16 +1,28 @@
 import { Injectable, Logger, BadRequestException, ConflictException, UnauthorizedException } from '@nestjs/common';
 import { UsersService } from '../users/users.service';
-import { RegisterDto } from './dto/register.dto'; 
 import * as bcrypt from 'bcrypt';
 import { LoginDto } from './dto/login.dto' ;
 import { JwtService } from '@nestjs/jwt';
+import { User } from '../users/entities/user.entity';
+import { CreateUserDto } from '../users/dto/create-user.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+
+
 
 @Injectable()
 export class AuthService {
 
+    private readonly logger = new Logger(AuthService.name);
+
+
     constructor(
         @InjectRepository(User)
         private userRepository: Repository<User>,
+        private usersService: UsersService,
+        private jwtService: JwtService,
+
+
   ) {}
 
     async login(dto: LoginDto) {
@@ -68,14 +80,14 @@ export class AuthService {
         const user = this.userRepository.create({
         email,
         password: hashedPassword,
-        firstName,
-        lastName,
+        first_name,
+        last_name,
         });
 
         await this.userRepository.save(user);
 
         // ۴. برگرداندن دیتای کاربر (بدون پسورد)
-        delete user.password;
+        this.userRepository.delete (user.password);
         return {
         message: 'ثبت‌نام با موفقیت انجام شد',
         user,

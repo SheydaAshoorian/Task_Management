@@ -2,6 +2,8 @@ import { Body, Controller, Post } from '@nestjs/common';
 import { ApiTags, ApiOperation } from '@nestjs/swagger';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
+import { CreateUserDto } from '../users/dto/create-user.dto';
+
 
 @ApiTags('Auth') // دسته‌بندی در سواگر
 @Controller('auth')

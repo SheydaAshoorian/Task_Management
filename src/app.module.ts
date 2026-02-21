@@ -31,6 +31,7 @@ import { TasksModule } from './tasks/tasks.module';
     }),
     AuthModule,
     UsersModule,
+    TasksModule,
   ],
   controllers: [AppController],
   providers: [AppService],
