@@ -7,7 +7,8 @@ import { User } from '../users/entities/user.entity';
 
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Task, User])],
+  imports: [
+    TypeOrmModule.forFeature([Task, User])],
   controllers: [TasksController],
   providers: [TasksService],
 })

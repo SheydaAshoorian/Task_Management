@@ -14,6 +14,7 @@ import { TasksModule } from './tasks/tasks.module';
 
     ConfigModule.forRoot({
       isGlobal: true, // باعث می‌شود در تمام ماژول‌ها به env دسترسی داشته باشی
+      envFilePath: '.env', // مسیر فایل تنظیمات
     }),
 
     TypeOrmModule.forRootAsync({

@@ -10,15 +10,23 @@ import { JwtModule } from '@nestjs/jwt';
 
 @Module({
   imports: [
+
     TypeOrmModule.forFeature([User]), //  برای UserRepository
-    forwardRef(() => UsersModule),  
-        JwtModule.registerAsync({
-      useFactory: async (configService: ConfigService) => ({
-        secret: configService.get<string>('JWT_SECRET') || 'secretKey',
-        signOptions: { expiresIn: '1d' },
-      }),
-      inject: [ConfigService],
+
+    ConfigModule.forRoot({
+      isGlobal: true, // اگر این true باشد، دیگر نیازی به ایمپورت در تک‌تک ماژول‌ها نیست
     }),
+
+    forwardRef(() => UsersModule),  
+
+    JwtModule.registerAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: async (configService: ConfigService) => ({
+        secret: configService.get<string>('JWT_SECRET'),
+        signOptions: { expiresIn: '1h' },
+      }),
+  }),
   ],
   providers: [AuthService],
   controllers: [AuthController],
