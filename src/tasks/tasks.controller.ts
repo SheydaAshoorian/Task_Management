@@ -21,6 +21,6 @@ export class TasksController {
 
   @Get()
   findAll(@Req() req) {
-    return this.tasksService.findAll(req.user.sub);
+    return this.tasksService.findUserAllTasks(req.user.sub);
   }
 }
