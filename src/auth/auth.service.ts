@@ -1,4 +1,5 @@
-import { Injectable, Logger, BadRequestException, ConflictException, UnauthorizedException } from '@nestjs/common';
+import { Injectable, Logger, BadRequestException, ConflictException,
+     UnauthorizedException , forwardRef, Inject} from '@nestjs/common';
 import { UsersService } from '../users/users.service';
 import * as bcrypt from 'bcrypt';
 import { LoginDto } from './dto/login.dto' ;
@@ -19,7 +20,8 @@ export class AuthService {
     constructor(
         @InjectRepository(User)
         private userRepository: Repository<User>,
-        private usersService: UsersService,
+        @Inject(forwardRef(() => UsersService)) 
+        private usersService: UsersService, 
         private jwtService: JwtService,
 
 
@@ -67,9 +69,11 @@ export class AuthService {
 
     // ۱. چک کردن تکراری نبودن کاربر
     const existingUser = await this.userRepository.findOne({ where: { email } });
-    
+    console.log('Checking for email:', email);
+
     if (existingUser) {
-      throw new BadRequestException('این ایمیل قبلاً ثبت شده است');
+        console.log('User found in DB:', existingUser);
+        throw new BadRequestException('این ایمیل قبلاً ثبت شده است');
     }
 
     try{
@@ -85,12 +89,14 @@ export class AuthService {
         });
 
         await this.userRepository.save(user);
+        console.log('User saved successfully:', user);
 
         // ۴. برگرداندن دیتای کاربر (بدون پسورد)
-        this.userRepository.delete (user.password);
+        const { password: _, ...userWithoutPassword } = user;
+
         return {
-        message: 'ثبت‌نام با موفقیت انجام شد',
-        user,
+            message: 'ثبت‌نام با موفقیت انجام شد',
+            user,
         };
 
     } catch (error) {

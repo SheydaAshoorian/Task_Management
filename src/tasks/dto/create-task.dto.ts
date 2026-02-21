@@ -1,4 +1,3 @@
-export class CreateTaskDto {}
 import { IsNotEmpty,IsString,IsOptional, IsNumber, IsEnum , IsDateString} from 'class-validator'; 
 import { ApiProperty } from '@nestjs/swagger';
 import { TaskStatus, TaskPriority } from '../entities/task.entity';

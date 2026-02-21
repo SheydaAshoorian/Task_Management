@@ -1,5 +1,6 @@
-import { Entity , Column, PrimaryGeneratedColumn, CreateDateColumn , UpdateDateColumn, OneToMany} from 'typeorm';
+import { Entity , Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, OneToMany} from 'typeorm';
 import { Task } from '../../tasks/entities/task.entity';
+import { Exclude } from 'class-transformer';
 
 export enum  UserRole{
 
@@ -33,6 +34,7 @@ export class User{
     role: UserRole ;
 
     @Column({ select: false})
+    @Exclude()
     password: string;
 
 

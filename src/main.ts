@@ -1,13 +1,14 @@
-import { NestFactory } from '@nestjs/core';
+import { NestFactory, Reflector } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ConfigService} from '@nestjs/config';
-import { ValidationPipe } from '@nestjs/common';
+import { ValidationPipe, ClassSerializerInterceptor } from '@nestjs/common';
 import { SwaggerModule, DocumentBuilder} from '@nestjs/swagger';
 
 async function bootstrap() {
 
   const app = await NestFactory.create(AppModule);
 
+  app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector))); // فعال‌سازی قابلیت سریالایز کردن (حذف فیلدهای @Exclude)
   app.enableCors(); // برای اینکه فرانت‌اِند بتونه بهش وصل شه
   app.setGlobalPrefix('api/v1');  // ورژن‌بندی API
   app.useGlobalPipes(new ValidationPipe()); // فعال سازی validations
